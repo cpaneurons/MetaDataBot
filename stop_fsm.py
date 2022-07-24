@@ -3,6 +3,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 
 from bot.create_bot import dp, bot
+from start_handlers.keyboard_markup import keyboard_menu_start
 from databases.database import VisuallyDB
 
 
@@ -22,7 +23,7 @@ async def stop_fsm(message: [Message, CallbackQuery], state: FSMContext):
         await message.message.answer('Операция успешно остановлена')
     except Exception:  # message
         chat_id = message.chat.id
-        await message.answer('Операция успешно остановлена')
+        await message.answer('Операция успешно остановлена', reply_markup=keyboard_menu_start)
 
     message_id = message_db.get_message_id(user_id=message.from_user.id)
     message_db.delete_all_by_user_id(user_id=message.from_user.id)
@@ -31,5 +32,5 @@ async def stop_fsm(message: [Message, CallbackQuery], state: FSMContext):
 
 def register_stop_fsm_handler(dp: dp):
     dp.register_message_handler(stop_fsm, commands='stop', state='*')
-    dp.register_message_handler(stop_fsm, Text(equals=['stop', 'стоп'], ignore_case=True), state='*')
+    dp.register_message_handler(stop_fsm, Text(equals=['stop', 'стоп', '❌Отмена'], ignore_case=True), state='*')
     dp.register_callback_query_handler(stop_fsm, Text(equals='stop_fsm', ignore_case=True), state='*')
