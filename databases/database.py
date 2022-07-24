@@ -38,7 +38,6 @@ class VisuallyDB:
         self.base.close()
 
 
-
 class FileDb:
     def __init__(self):
         try:

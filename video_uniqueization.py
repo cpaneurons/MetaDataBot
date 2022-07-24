@@ -46,11 +46,12 @@ async def create_stream_spec_filter() -> StreamSpec:
     file_path = info[1]
     new_file_path = info[2]
     stream = ffmpeg.input(file_path)
+    audio = stream.audio.filter("aecho", 0.8, 0.9, 1000, 0.3)
     stream = ffmpeg.filter(stream, "scale", width, height)
     stream = ffmpeg.filter(stream, "colorcorrect", 0.001)
     # stream = ffmpeg.filter(stream, "avgblur", 1)
     stream = ffmpeg.filter(stream, 'eq', contrast=0.9, brightness=0.01, saturation=1.1, gamma=0.9)
-    return ffmpeg.output(stream, new_file_path)
+    return ffmpeg.output(stream, audio, new_file_path)
 
 
 async def replacement_exif_for_video(file_path, message_id, chat_id, user_id):
